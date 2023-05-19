@@ -1,0 +1,33 @@
+---
+- name: task1
+  yum:
+    name: nfs-utils
+    state: latest
+- name: task2
+  file:
+    path: /nfsdata/
+    mode: '0755'
+    state: directory
+- name: task3
+  copy: 
+    src: "{{ item }}"
+    dest: /nfsdata
+    remote_src: no 
+  with_fileglob:
+  - "/etc/[a-c]*"
+  notify: start_service
+- name: task4
+  lineinfile:
+    path: /etc/exports
+    line: "/nfsdata   *(rw,no_root_squash)"
+- name: task5
+  firewalld:
+    service: "{{ item }}"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  loop:
+  - nfs
+  - mountd
+  - rpc-bind 
+  notify: reload_firewall

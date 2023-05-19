@@ -1,0 +1,9 @@
+---
+- name: mounting an NFS share
+  mount:
+    src: node2:/nfsdata/
+    path: /mnt
+    fstype: nfs
+    state: mounted
+    opts: "defaults,_netdev"
+

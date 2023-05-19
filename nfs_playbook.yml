@@ -1,0 +1,20 @@
+---
+- name: play1
+  hosts: node2
+  gather_facts: no
+  tasks:
+  - name: configure nfs_server 
+    include_tasks: tasks/nfs_server.yml 
+  handlers: 
+  - name: start_service
+    command: systemctl enable --now nfs-server
+  - name: reload_firewall
+    command: firewall-cmd --reload
+
+- name: play2
+  hosts: node1
+  gather_facts: no
+  tasks:
+  - name: configure nfs_client
+    include_tasks: tasks/nfs_client.yml
+
